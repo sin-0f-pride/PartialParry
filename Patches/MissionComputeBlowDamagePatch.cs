@@ -15,33 +15,63 @@ namespace PartialParry.Patches
         {
             if (!attackCollisionData.AttackBlockedWithShield && (attackCollisionData.CollisionResult == CombatCollisionResult.Parried || attackCollisionData.CollisionResult == CombatCollisionResult.Blocked))
             {
-                float baseParryMagnitude = Settings.Current.baseMagnitudeParried;
-                if (attackCollisionData.CollisionResult == CombatCollisionResult.Parried)
-                {
-                    baseParryMagnitude *= Settings.Current.perfectParryBonus / 100f;
-                }
+                float parryMagnitude = attackCollisionData.CollisionResult != CombatCollisionResult.Parried ? Settings.Current.ParryBaseMagnitude : Settings.Current.PerfectParryMagnitude;
                 if (attackerWeapon.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
                 {
-                    baseParryMagnitude *= Settings.Current.shieldBreakWeaponDefendMalus / 100f;
+                    parryMagnitude *= Settings.Current.BonusAgainstShieldMalus;
                 }
-                WeaponClass weaponClass = attackInformation.VictimMainHandWeapon.CurrentUsageItem.WeaponClass;
-                if (weaponClass == WeaponClass.TwoHandedAxe || weaponClass == WeaponClass.TwoHandedSword || weaponClass == WeaponClass.TwoHandedMace || weaponClass == WeaponClass.TwoHandedPolearm)
+                int attackerWeaponValue = GetValueForWeaponClass(attackerWeapon.WeaponClass);
+                if (attackerWeaponValue == 0)
                 {
-                    baseParryMagnitude *= Settings.Current.twoHandedWeaponParryBonus / 100f;
+                    parryMagnitude *= Settings.Current.TwoHandedParryMalus;
                 }
-                if (weaponClass == WeaponClass.Dagger)
+                else if (attackerWeaponValue == 1)
                 {
-                    baseParryMagnitude *= Settings.Current.littleWeaponParryMalus / 100f;
+                    parryMagnitude *= Settings.Current.DaggerParryBonus;
                 }
-                float oldMagnitude = magnitude;
-                magnitude -= baseParryMagnitude;
-                magnitude = MathF.Max(0f, magnitude);
-                if (Settings.Current.showLog && (attackInformation.IsAttackerPlayer || attackInformation.IsVictimPlayer))
+                int victimWeaponValue = GetValueForWeaponClass(attackInformation.VictimMainHandWeapon.CurrentUsageItem.WeaponClass);
+                if (victimWeaponValue == 0)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage(string.Format("magnitude before parry:{0} after:{1} ", oldMagnitude, magnitude)));
+                    parryMagnitude *= Settings.Current.TwoHandedParryBonus;
                 }
+                else if (victimWeaponValue == 1)
+                {
+                    parryMagnitude *= Settings.Current.DaggerParryMalus;
+                }
+                if (Settings.Current.SkillLevelMagnitude)
+                {
+                    int attackerSkill = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerWeapon.RelevantSkill);
+                    int victimSkill = attackInformation.VictimAgentCharacter.GetSkillValue(attackInformation.VictimMainHandWeapon.CurrentUsageItem.RelevantSkill);
+                    if (attackerSkill > victimSkill)
+                    {
+                        parryMagnitude /= (victimSkill - attackerSkill) / 100f;
+                    }
+                    else if (victimSkill > attackerSkill)
+                    {
+                        parryMagnitude *= (victimSkill - attackerSkill) / 100f;
+                    }
+                }
+                float newMagnitude = MathF.Max(0f, magnitude - (magnitude * parryMagnitude));
+                if (Settings.Current.Logging && (attackInformation.IsAttackerPlayer || attackInformation.IsVictimPlayer))
+                {
+                    InformationManager.DisplayMessage(new InformationMessage(string.Format("magnitude before parry:{0} after:{1} ", magnitude, newMagnitude)));
+                }
+                magnitude = newMagnitude;
             }
             return true;
+        }
+
+        private static int GetValueForWeaponClass(WeaponClass weaponClass)
+        {
+            if (weaponClass == WeaponClass.TwoHandedAxe || weaponClass == WeaponClass.TwoHandedSword || weaponClass == WeaponClass.TwoHandedMace || weaponClass == WeaponClass.TwoHandedPolearm)
+            {
+                return 0;
+            }
+            if (weaponClass == WeaponClass.Dagger)
+            {
+                return 1;
+            }
+            return -1;
         }
     }
 }

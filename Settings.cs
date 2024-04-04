@@ -11,103 +11,149 @@ namespace PartialParry
             //Rmpty
         }
 
-        private int _baseMagnitudeParried = 100;
-        private int _perfectParryBonus = 150;
-        private bool _showLog = false;
-        private int _shieldBreakWeaponDefendMalus = 90;
-        private int _twoHandedWeaponParryBonus = 150;
-        private int _littleWeaponParryMalus = 75;
+        private float _parryBaseMagnitude = 0.3f;
+        private float _perfectParryMagnitude = 0.6f;
+        private float _daggerParryBonus = 1.25f;
+        private float _twoHandedParryBonus = 2f;
+        private float _bonusAgainstShieldMalus = 0.9f;
+        private float _daggerParryMalus = 0.8f;
+        private float _twoHandedParryMalus = 0.5f;
+        private bool _skillLevelMagnitude = false;
+        private bool _logging = false;
 
-        public override string Id => "PartialParryMeleeHit";
-        public override string DisplayName => $"Parry doesn't always block everything";
-        public override string FolderName => "Parry Setting";
+        public override string Id => "PartialParry";
+        public override string DisplayName => $"Partial Parry";
+        public override string FolderName => "PartialParry";
         public override string FormatType => "json2";
 
-        [SettingPropertyInteger("parry base magnitude", 0, 1000, RequireRestart = false, HintText = "how much base damage you can block before it starts crushing through parry")]
-        [SettingPropertyGroup("General")]
-        public int baseMagnitudeParried
+        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through.")]
+        [SettingPropertyGroup("General", GroupOrder = 0)]
+        public float ParryBaseMagnitude
         {
-            get => _baseMagnitudeParried;
+            get => _parryBaseMagnitude;
             set
             {
-                if (_baseMagnitudeParried != value)
+                if (_parryBaseMagnitude != value)
                 {
-                    _baseMagnitudeParried = value;
+                    _parryBaseMagnitude = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        [SettingPropertyInteger("perfect parry bonus in %", 0, 1000, RequireRestart = false, HintText = "multiply the \"parry base magnitude\" by this percentage if you get a perfect parry (blocking right before you get hit)")]
-        [SettingPropertyGroup("General")]
-        public int perfectParryBonus
+        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through.")]
+        [SettingPropertyGroup("General", GroupOrder = 0)]
+        public float PerfectParryMagnitude
         {
-            get => _perfectParryBonus;
+            get => _perfectParryMagnitude;
             set
             {
-                if (_perfectParryBonus != value)
+                if (_perfectParryMagnitude != value)
                 {
-                    _perfectParryBonus = value;
+                    _perfectParryMagnitude = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        [SettingPropertyBool("should show log", Order = 1, RequireRestart = false, HintText = "show the magnitude before and after parry in log")]
-        [SettingPropertyGroup("General")]
-        public bool showLog
+        [SettingPropertyBool("Skill Level Magnitude (EXPERIMENTAL)", RequireRestart = false, HintText = "Damage bonuses & maluses based upon the skill level of the attackers skill in their weapon, as well as the skill level of the defenders skill in their parrying weapon.")]
+        [SettingPropertyGroup("General", GroupOrder = 0)]
+        public bool SkillLevelMagnitude
         {
-            get => _showLog;
+            get => _skillLevelMagnitude;
             set
             {
-                if (_showLog != value)
+                if (_skillLevelMagnitude != value)
                 {
-                    _showLog = value;
+                    _skillLevelMagnitude = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        [SettingPropertyInteger("malus against shield break weapon %", 0, 100, RequireRestart = false, HintText = "multiply the \"parry base magnitude\" by this percentage if you parry a hit from a weapon with shield damage bonus on shield")]
-        [SettingPropertyGroup("General")]
-        public int shieldBreakWeaponDefendMalus
+        [SettingPropertyFloatingInteger("Parry bonus vs Daggers", 0f, 1f, RequireRestart = false, HintText = "Damage decrease when parrying against a dagger.")]
+        [SettingPropertyGroup("Bonus", GroupOrder = 10)]
+        public float DaggerParryBonus
         {
-            get => _shieldBreakWeaponDefendMalus;
+            get => _daggerParryBonus;
             set
             {
-                if (_shieldBreakWeaponDefendMalus != value)
+                if (_daggerParryBonus != value)
                 {
-                    _shieldBreakWeaponDefendMalus = value;
+                    _daggerParryBonus = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        [SettingPropertyFloatingInteger("Parry bonus using Two handed weapons", 0f, 1f, RequireRestart = false, HintText = "Damage decrease when parrying with a two handed weapon.")]
+        [SettingPropertyGroup("Bonus", GroupOrder = 10)]
+        public float TwoHandedParryBonus
+        {
+            get => _twoHandedParryBonus;
+            set
+            {
+                if (_twoHandedParryBonus != value)
+                {
+                    _twoHandedParryBonus = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        [SettingPropertyInteger("malus when parrying with a dagger in %", 0, 100, RequireRestart = false, HintText = "multiply the \"parry base magnitude\" by this percentage if you parry with a dagger")]
-        [SettingPropertyGroup("General")]
-        public int littleWeaponParryMalus
+        [SettingPropertyFloatingInteger("Parry malus vs Bonus shield damage weapons", 0f, 1f, RequireRestart = false, HintText = "Damage increase when parrying against a weapon that has bonus damage to shield, such as an axe.")]
+        [SettingPropertyGroup("Malus", GroupOrder = 20)]
+        public float BonusAgainstShieldMalus
         {
-            get => _littleWeaponParryMalus;
+            get => _bonusAgainstShieldMalus;
             set
             {
-                if (_littleWeaponParryMalus != value)
+                if (_bonusAgainstShieldMalus != value)
                 {
-                    _littleWeaponParryMalus = value;
+                    _bonusAgainstShieldMalus = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        [SettingPropertyInteger("two hand weapon bonus in %", 0, 1000, RequireRestart = false, HintText = " multiply the \"parry base magnitude\" by this percentage if you're using a two handed weapon")]
-        [SettingPropertyGroup("General")]
-        public int twoHandedWeaponParryBonus
+        [SettingPropertyFloatingInteger("Parry malus using Daggers", 0f, 1f, RequireRestart = false, HintText = "Damage increase when parrying with a dagger.")]
+        [SettingPropertyGroup("Malus", GroupOrder = 20)]
+        public float DaggerParryMalus
         {
-            get => _twoHandedWeaponParryBonus;
+            get => _daggerParryMalus;
             set
             {
-                if (_twoHandedWeaponParryBonus != value)
+                if (_daggerParryMalus != value)
                 {
-                    _twoHandedWeaponParryBonus = value;
+                    _daggerParryMalus = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        [SettingPropertyFloatingInteger("Parry malus vs Two handed weapons", 0f, 1f, RequireRestart = false, HintText = "Damage increase when parrying against a two handed weapon.")]
+        [SettingPropertyGroup("Malus", GroupOrder = 20)]
+        public float TwoHandedParryMalus
+        {
+            get => _twoHandedParryMalus;
+            set
+            {
+                if (_twoHandedParryMalus != value)
+                {
+                    _twoHandedParryMalus = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        [SettingPropertyBool("Logging", RequireRestart = false, HintText = "Displays before and after magnitudes in the game log.")]
+        [SettingPropertyGroup("General")]
+        public bool Logging
+        {
+            get => _logging;
+            set
+            {
+                if (_logging != value)
+                {
+                    _logging = value;
                     OnPropertyChanged();
                 }
             }
