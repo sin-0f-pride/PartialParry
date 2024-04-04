@@ -44,7 +44,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", Order = 1, RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through. Default: 90%")]
+        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", Order = 1, RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through. Default: 100%")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public float PerfectParryMagnitude
         {
@@ -73,7 +73,7 @@ namespace PartialParry
                 }
             }
         }
-        [SettingPropertyBool("Logging", RequireRestart = false, HintText = "Logs before and after magnitudes to a file, for testing and reporting purposes. Default: Disabled")]
+        [SettingPropertyBool("Logging", Order = 3, RequireRestart = false, HintText = "Logs before and after magnitudes to a file, for testing and reporting purposes. Default: Disabled")]
         [SettingPropertyGroup("General")]
         public bool Logging
         {
@@ -117,7 +117,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry malus vs Bonus shield damage weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying against a weapon that has bonus damage to shield, such as an axe. Default: 50%")]
+        [SettingPropertyFloatingInteger("Parry malus vs Bonus shield damage weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying against a weapon that has bonus damage to shield, such as an axe. Default: 90%")]
         [SettingPropertyGroup("Malus", GroupOrder = 20)]
         public float BonusAgainstShieldMalus
         {
@@ -132,7 +132,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry malus using Daggers", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying with a dagger. Default: 90%")]
+        [SettingPropertyFloatingInteger("Parry malus using Daggers", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying with a dagger. Default: 80%")]
         [SettingPropertyGroup("Malus", GroupOrder = 20)]
         public float DaggerParryMalus
         {
@@ -147,7 +147,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry malus vs Two handed weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying against a two handed weapon. Default: 80%")]
+        [SettingPropertyFloatingInteger("Parry malus vs Two handed weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying against a two handed weapon. Default: 50%")]
         [SettingPropertyGroup("Malus", GroupOrder = 20)]
         public float TwoHandedParryMalus
         {
