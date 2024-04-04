@@ -11,14 +11,17 @@ namespace PartialParry
             //Rmpty
         }
 
-        private float _parryBaseMagnitude = 0.3f;
-        private float _perfectParryMagnitude = 0.6f;
+        private float _parryBaseMagnitude = 0.6f;
+        private float _perfectParryMagnitude = 1f;
+        private bool _skillLevelMagnitude = false;
+
         private float _daggerParryBonus = 1.25f;
         private float _twoHandedParryBonus = 2f;
+
         private float _bonusAgainstShieldMalus = 0.9f;
         private float _daggerParryMalus = 0.8f;
         private float _twoHandedParryMalus = 0.5f;
-        private bool _skillLevelMagnitude = false;
+
         private bool _logging = false;
 
         public override string Id => "PartialParry";
@@ -26,7 +29,7 @@ namespace PartialParry
         public override string FolderName => "PartialParry";
         public override string FormatType => "json2";
 
-        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through.")]
+        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through Default: 60%.")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public float ParryBaseMagnitude
         {
@@ -41,7 +44,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through.")]
+        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through. Default: 90%")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public float PerfectParryMagnitude
         {
@@ -56,7 +59,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyBool("Skill Level Magnitude (EXPERIMENTAL)", RequireRestart = false, HintText = "Damage bonuses & maluses based upon the skill level of the attackers skill in their weapon, as well as the skill level of the defenders skill in their parrying weapon.")]
+        [SettingPropertyBool("Skill Level Magnitude (EXPERIMENTAL)", RequireRestart = false, HintText = "Parry modifier based upon the skill level difference of the attackers and defenders skill in their respective weapon. Default: Disabled")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public bool SkillLevelMagnitude
         {
@@ -71,7 +74,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry bonus vs Daggers", 0f, 1f, RequireRestart = false, HintText = "Damage decrease when parrying against a dagger.")]
+        [SettingPropertyFloatingInteger("Parry bonus vs Daggers", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry bonus when parrying against a dagger. Default: 125%")]
         [SettingPropertyGroup("Bonus", GroupOrder = 10)]
         public float DaggerParryBonus
         {
@@ -85,7 +88,7 @@ namespace PartialParry
                 }
             }
         }
-        [SettingPropertyFloatingInteger("Parry bonus using Two handed weapons", 0f, 1f, RequireRestart = false, HintText = "Damage decrease when parrying with a two handed weapon.")]
+        [SettingPropertyFloatingInteger("Parry bonus using Two handed weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry bonus when parrying with a two handed weapon. Default: 200%")]
         [SettingPropertyGroup("Bonus", GroupOrder = 10)]
         public float TwoHandedParryBonus
         {
@@ -100,7 +103,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry malus vs Bonus shield damage weapons", 0f, 1f, RequireRestart = false, HintText = "Damage increase when parrying against a weapon that has bonus damage to shield, such as an axe.")]
+        [SettingPropertyFloatingInteger("Parry malus vs Bonus shield damage weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying against a weapon that has bonus damage to shield, such as an axe. Default: 50%")]
         [SettingPropertyGroup("Malus", GroupOrder = 20)]
         public float BonusAgainstShieldMalus
         {
@@ -115,7 +118,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry malus using Daggers", 0f, 1f, RequireRestart = false, HintText = "Damage increase when parrying with a dagger.")]
+        [SettingPropertyFloatingInteger("Parry malus using Daggers", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying with a dagger. Default: 90%")]
         [SettingPropertyGroup("Malus", GroupOrder = 20)]
         public float DaggerParryMalus
         {
@@ -130,7 +133,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Parry malus vs Two handed weapons", 0f, 1f, RequireRestart = false, HintText = "Damage increase when parrying against a two handed weapon.")]
+        [SettingPropertyFloatingInteger("Parry malus vs Two handed weapons", 0f, 2f, "#0%", RequireRestart = false, HintText = "Parry malus when parrying against a two handed weapon. Default: 80%")]
         [SettingPropertyGroup("Malus", GroupOrder = 20)]
         public float TwoHandedParryMalus
         {
@@ -144,7 +147,7 @@ namespace PartialParry
                 }
             }
         }
-        [SettingPropertyBool("Logging", RequireRestart = false, HintText = "Displays before and after magnitudes in the game log.")]
+        [SettingPropertyBool("Logging", RequireRestart = false, HintText = "Logs before and after magnitudes to a file, for testing and reporting purposes. Default: Disabled")]
         [SettingPropertyGroup("General")]
         public bool Logging
         {
