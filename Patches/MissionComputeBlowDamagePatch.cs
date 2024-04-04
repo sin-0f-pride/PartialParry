@@ -42,19 +42,24 @@ namespace PartialParry.Patches
                 {
                     int attackerSkill = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerWeapon.RelevantSkill);
                     int victimSkill = attackInformation.VictimAgentCharacter.GetSkillValue(attackInformation.VictimMainHandWeapon.CurrentUsageItem.RelevantSkill);
-                    if (attackerSkill > victimSkill)
+                    float skillMagnitude = attackerSkill - victimSkill;
+                    if (Settings.Current.Logging)
                     {
-                        parryMagnitude /= (victimSkill - attackerSkill) / 100f;
+                        SubModule.Log("Attacker Skill=" + attackerSkill + ", Victim Skill=" + victimSkill + ", SkillMagnitude=" + skillMagnitude);
                     }
-                    else if (victimSkill > attackerSkill)
+                    if (skillMagnitude > 0)
                     {
-                        parryMagnitude *= (victimSkill - attackerSkill) / 100f;
+                        parryMagnitude /= skillMagnitude;
+                    }
+                    else
+                    {
+                        parryMagnitude *= MathF.Abs(skillMagnitude);
                     }
                 }
                 float newMagnitude = MathF.Max(0f, magnitude - (magnitude * parryMagnitude));
                 if (Settings.Current.Logging && (attackInformation.IsAttackerPlayer || attackInformation.IsVictimPlayer))
                 {
-                    InformationManager.DisplayMessage(new InformationMessage(string.Format("magnitude before parry:{0} after:{1} ", magnitude, newMagnitude)));
+                    SubModule.Log("Before=" + magnitude + ", After=" + newMagnitude);
                 }
                 magnitude = newMagnitude;
             }
