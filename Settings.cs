@@ -29,7 +29,7 @@ namespace PartialParry
         public override string FolderName => "PartialParry";
         public override string FormatType => "json2";
 
-        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through Default: 60%.")]
+        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", Order = 0, RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through Default: 60%.")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public float ParryBaseMagnitude
         {
@@ -44,7 +44,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through. Default: 90%")]
+        [SettingPropertyFloatingInteger("Perfect parry magnitude", 0f, 1f, "#0%", Order = 1, RequireRestart = false, HintText = "Damage to be blocked by perfectly timed parry before crushing through. Default: 90%")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public float PerfectParryMagnitude
         {
@@ -59,7 +59,7 @@ namespace PartialParry
             }
         }
 
-        [SettingPropertyBool("Skill Level Magnitude (EXPERIMENTAL)", RequireRestart = false, HintText = "Parry modifier based upon the skill level difference of the attackers and defenders skill in their respective weapon. Default: Disabled")]
+        [SettingPropertyBool("Skill Level Magnitude (EXPERIMENTAL)", Order = 2, RequireRestart = false, HintText = "Parry modifier based upon the skill level difference of the attackers and defenders skill in their respective weapon. Default: Disabled")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public bool SkillLevelMagnitude
         {
@@ -69,6 +69,20 @@ namespace PartialParry
                 if (_skillLevelMagnitude != value)
                 {
                     _skillLevelMagnitude = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        [SettingPropertyBool("Logging", RequireRestart = false, HintText = "Logs before and after magnitudes to a file, for testing and reporting purposes. Default: Disabled")]
+        [SettingPropertyGroup("General")]
+        public bool Logging
+        {
+            get => _logging;
+            set
+            {
+                if (_logging != value)
+                {
+                    _logging = value;
                     OnPropertyChanged();
                 }
             }
@@ -143,20 +157,6 @@ namespace PartialParry
                 if (_twoHandedParryMalus != value)
                 {
                     _twoHandedParryMalus = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-        [SettingPropertyBool("Logging", RequireRestart = false, HintText = "Logs before and after magnitudes to a file, for testing and reporting purposes. Default: Disabled")]
-        [SettingPropertyGroup("General")]
-        public bool Logging
-        {
-            get => _logging;
-            set
-            {
-                if (_logging != value)
-                {
-                    _logging = value;
                     OnPropertyChanged();
                 }
             }
