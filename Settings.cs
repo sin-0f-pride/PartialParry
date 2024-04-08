@@ -29,7 +29,7 @@ namespace PartialParry
         public override string FolderName => "PartialParry";
         public override string FormatType => "json2";
 
-        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", Order = 0, RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through Default: 60%.")]
+        [SettingPropertyFloatingInteger("Parry base magnitude", 0f, 1f, "#0%", Order = 0, RequireRestart = false, HintText = "Base damage to be blocked by parry before crushing through. Default: 60%.")]
         [SettingPropertyGroup("General", GroupOrder = 0)]
         public float ParryBaseMagnitude
         {
