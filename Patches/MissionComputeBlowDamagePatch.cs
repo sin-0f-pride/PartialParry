@@ -16,44 +16,56 @@ namespace PartialParry.Patches
             if (!attackCollisionData.AttackBlockedWithShield && (attackCollisionData.CollisionResult == CombatCollisionResult.Parried || attackCollisionData.CollisionResult == CombatCollisionResult.Blocked))
             {
                 float parryMagnitude = attackCollisionData.CollisionResult != CombatCollisionResult.Parried ? Settings.Current.ParryBaseMagnitude : Settings.Current.PerfectParryMagnitude;
-                if (attackerWeapon.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
+                if (attackerWeapon != null)
                 {
-                    parryMagnitude *= Settings.Current.BonusAgainstShieldMalus;
+                    if (attackerWeapon.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
+                    {
+                        parryMagnitude *= Settings.Current.BonusAgainstShieldMalus;
+                    }
+                    int attackerWeaponValue = GetValueForWeaponClass(attackerWeapon.WeaponClass);
+                    if (attackerWeaponValue == 0)
+                    {
+                        parryMagnitude *= Settings.Current.TwoHandedParryMalus;
+                    }
+                    else if (attackerWeaponValue == 1)
+                    {
+                        parryMagnitude *= Settings.Current.DaggerParryBonus;
+                    }
                 }
-                int attackerWeaponValue = GetValueForWeaponClass(attackerWeapon.WeaponClass);
-                if (attackerWeaponValue == 0)
+                WeaponComponentData victimWeapon = attackInformation.VictimMainHandWeapon.CurrentUsageItem;
+                if (victimWeapon != null)
                 {
-                    parryMagnitude *= Settings.Current.TwoHandedParryMalus;
-                }
-                else if (attackerWeaponValue == 1)
-                {
-                    parryMagnitude *= Settings.Current.DaggerParryBonus;
-                }
-                int victimWeaponValue = GetValueForWeaponClass(attackInformation.VictimMainHandWeapon.CurrentUsageItem.WeaponClass);
-                if (victimWeaponValue == 0)
-                {
-                    parryMagnitude *= Settings.Current.TwoHandedParryBonus;
-                }
-                else if (victimWeaponValue == 1)
-                {
-                    parryMagnitude *= Settings.Current.DaggerParryMalus;
+                    int victimWeaponValue = GetValueForWeaponClass(victimWeapon.WeaponClass);
+                    if (victimWeaponValue == 0)
+                    {
+                        parryMagnitude *= Settings.Current.TwoHandedParryBonus;
+                    }
+                    else if (victimWeaponValue == 1)
+                    {
+                        parryMagnitude *= Settings.Current.DaggerParryMalus;
+                    }
                 }
                 if (Settings.Current.SkillLevelMagnitude)
                 {
-                    int attackerSkill = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerWeapon.RelevantSkill);
-                    int victimSkill = attackInformation.VictimAgentCharacter.GetSkillValue(attackInformation.VictimMainHandWeapon.CurrentUsageItem.RelevantSkill);
-                    float skillMagnitude = attackerSkill - victimSkill;
-                    if (Settings.Current.Logging)
+                    SkillObject attackerSkill = attackerWeapon.RelevantSkill;
+                    SkillObject victimSkill = victimWeapon.RelevantSkill;
+                    if (attackerSkill != null && victimSkill != null)
                     {
-                        SubModule.Log("Attacker Skill=" + attackerSkill + ", Victim Skill=" + victimSkill + ", SkillMagnitude=" + skillMagnitude);
-                    }
-                    if (skillMagnitude > 0)
-                    {
-                        parryMagnitude /= skillMagnitude;
-                    }
-                    else
-                    {
-                        parryMagnitude *= MathF.Abs(skillMagnitude);
+                        int attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerSkill);
+                        int victimSkillLevel = attackInformation.VictimAgentCharacter.GetSkillValue(victimWeapon.RelevantSkill);
+                        float skillMagnitude = attackerSkillLevel - victimSkillLevel;
+                        if (skillMagnitude > 0)
+                        {
+                            parryMagnitude /= skillMagnitude;
+                        }
+                        else
+                        {
+                            parryMagnitude *= MathF.Abs(skillMagnitude);
+                        }
+                        if (Settings.Current.Logging)
+                        {
+                            SubModule.Log("Attacker Skill=" + attackerSkillLevel + ", Victim Skill=" + victimSkillLevel + ", SkillMagnitude=" + skillMagnitude);
+                        }
                     }
                 }
                 float newMagnitude = MathF.Max(0f, magnitude - (magnitude * parryMagnitude));
