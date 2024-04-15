@@ -47,25 +47,28 @@ namespace PartialParry.Patches
                 }
                 if (Settings.Current.SkillLevelMagnitude)
                 {
-                    SkillObject attackerSkill = attackerWeapon.RelevantSkill;
-                    SkillObject victimSkill = victimWeapon.RelevantSkill;
-                    if (attackerSkill != null && victimSkill != null)
+                    int attackerSkillLevel = 0;
+                    int victimSkillLevel = 0;
+                    if (attackerWeapon != null)
                     {
-                        int attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerSkill);
-                        int victimSkillLevel = attackInformation.VictimAgentCharacter.GetSkillValue(victimWeapon.RelevantSkill);
-                        float skillMagnitude = attackerSkillLevel - victimSkillLevel;
-                        if (skillMagnitude > 0)
-                        {
-                            parryMagnitude /= skillMagnitude;
-                        }
-                        else
-                        {
-                            parryMagnitude *= MathF.Abs(skillMagnitude);
-                        }
-                        if (Settings.Current.Logging)
-                        {
-                            SubModule.Log("Attacker Skill=" + attackerSkillLevel + ", Victim Skill=" + victimSkillLevel + ", SkillMagnitude=" + skillMagnitude);
-                        }
+                        attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerWeapon.RelevantSkill);
+                    }
+                    if (victimWeapon != null)
+                    {
+                        victimSkillLevel = attackInformation.VictimAgentCharacter.GetSkillValue(victimWeapon.RelevantSkill);
+                    }
+                    float skillMagnitude = attackerSkillLevel - victimSkillLevel;
+                    if (skillMagnitude > 0)
+                    {
+                        parryMagnitude /= skillMagnitude;
+                    }
+                    else
+                    {
+                        parryMagnitude *= MathF.Abs(skillMagnitude);
+                    }
+                    if (Settings.Current.Logging)
+                    {
+                        SubModule.Log("Attacker Skill=" + attackerSkillLevel + ", Victim Skill=" + victimSkillLevel + ", SkillMagnitude=" + skillMagnitude);
                     }
                 }
                 float newMagnitude = MathF.Max(0f, magnitude - (magnitude * parryMagnitude));
