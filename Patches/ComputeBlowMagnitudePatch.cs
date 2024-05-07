@@ -1,28 +1,32 @@
-﻿using TaleWorlds.Core;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-using HarmonyLib;
-
 namespace PartialParry.Patches
 {
-
-    [HarmonyPatch(typeof(MissionCombatMechanicsHelper), "ComputeBlowDamage")]
-    public static class MissionComputeBlowDamagePatch
+    [HarmonyPatch(typeof(MissionCombatMechanicsHelper), "ComputeBlowMagnitude")]
+    public static class ComputeBlowMagnitudePatch
     {
         // here we reduce the magnitude which his the damage before armor so that parry will not always parry everything
-        public static bool Prefix(AttackInformation attackInformation, AttackCollisionData attackCollisionData, WeaponComponentData attackerWeapon, ref float magnitude)
+        public static void Postfix(AttackCollisionData acd, AttackInformation attackInformation, MissionWeapon weapon, ref float specialMagnitude)
         {
-            if (!attackCollisionData.AttackBlockedWithShield && (attackCollisionData.CollisionResult == CombatCollisionResult.Parried || attackCollisionData.CollisionResult == CombatCollisionResult.Blocked))
+            if (!acd.AttackBlockedWithShield && (acd.CollisionResult == CombatCollisionResult.Parried || acd.CollisionResult == CombatCollisionResult.Blocked))
             {
-                float parryMagnitude = attackCollisionData.CollisionResult != CombatCollisionResult.Parried ? Settings.Current.ParryBaseMagnitude : Settings.Current.PerfectParryMagnitude;
-                if (attackerWeapon != null)
+                float parryMagnitude = acd.CollisionResult != CombatCollisionResult.Parried ? Settings.Current.ParryBaseMagnitude : Settings.Current.PerfectParryMagnitude;
+                WeaponComponentData currentUsageItem = weapon.CurrentUsageItem;
+                if (currentUsageItem != null)
                 {
-                    if (attackerWeapon.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
+                    if (currentUsageItem.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
                     {
                         parryMagnitude *= Settings.Current.BonusAgainstShieldMalus;
                     }
-                    int attackerWeaponValue = GetValueForWeaponClass(attackerWeapon.WeaponClass);
+                    int attackerWeaponValue = GetValueForWeaponClass(currentUsageItem.WeaponClass);
                     if (attackerWeaponValue == 0)
                     {
                         parryMagnitude *= Settings.Current.TwoHandedParryMalus;
@@ -49,9 +53,9 @@ namespace PartialParry.Patches
                 {
                     int attackerSkillLevel = 0;
                     int victimSkillLevel = 0;
-                    if (attackerWeapon != null)
+                    if (currentUsageItem != null)
                     {
-                        attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerWeapon.RelevantSkill);
+                        attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(currentUsageItem.RelevantSkill);
                     }
                     if (victimWeapon != null)
                     {
@@ -71,14 +75,13 @@ namespace PartialParry.Patches
                         SubModule.Log("Attacker Skill=" + attackerSkillLevel + ", Victim Skill=" + victimSkillLevel + ", SkillMagnitude=" + skillMagnitude);
                     }
                 }
-                float newMagnitude = MathF.Max(0f, magnitude - (magnitude * parryMagnitude));
+                float newMagnitude = MathF.Max(0f, specialMagnitude - (specialMagnitude * parryMagnitude));
                 if (Settings.Current.Logging && (attackInformation.IsAttackerPlayer || attackInformation.IsVictimPlayer))
                 {
-                    SubModule.Log("Before=" + magnitude + ", After=" + newMagnitude);
+                    SubModule.Log("Before=" + specialMagnitude + ", After=" + newMagnitude);
                 }
-                magnitude = newMagnitude;
+                specialMagnitude = newMagnitude;
             }
-            return true;
         }
 
         private static int GetValueForWeaponClass(WeaponClass weaponClass)
