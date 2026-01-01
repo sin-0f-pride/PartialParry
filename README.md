@@ -1,1 +1,1 @@
-# PartialParry
+# BannelordModPartialParry
