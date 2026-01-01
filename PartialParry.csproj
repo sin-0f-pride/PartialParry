@@ -2,17 +2,201 @@
 
   <PropertyGroup>
     <Version>1.0.1</Version>
-    <TargetFramework>net472</TargetFramework>
-    <Platforms>x64</Platforms>
-    <LangVersion>preview</LangVersion>
+	<TargetFramework>netstandard2.0</TargetFramework>
+	<Platforms>x64</Platforms>
+	<LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
-    <ModuleName>$(MSBuildProjectName)</ModuleName>
-    <GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+	<BuildForWindows>True</BuildForWindows>
+	<BuildForWindowsStore>True</BuildForWindowsStore>
+	<ModuleId>$(MSBuildProjectName)</ModuleId>
+	<ModuleName>$(MSBuildProjectName)</ModuleName>
+	<ModuleUrl></ModuleUrl>
+	<GameFolder>$(BANNERLORD_GAME_DIR)</GameFolder>
+	<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client')">Win64_Shipping_Client</GameBinariesFolder>
+	<GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
+	<BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
+	
+	<PropertyGroup>
+		<GameFolder Condition="!Exists($(GameFolder)) AND $(OS) == 'Windows_NT'">$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 261550@InstallLocation)</GameFolder>
+		<GameFolder Condition="!Exists($(GameFolder)) AND $(OS) == 'Windows_NT'">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+	</PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll" Exclude="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Native.dll">
-      <HintPath>%(Identity)</HintPath>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.AchievementSystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.AchievementSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ActivitySystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ActivitySystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.ViewModelCollection.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.ViewModelCollection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.ViewModelCollection.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.ViewModelCollection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.GDK.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.GDK.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.GOG.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.GOG.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.Steam.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.Steam.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.Test.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.AccessProvider.Test.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Diamond.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.AutoGenerated.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.AutoGenerated.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.DotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.AutoGenerated.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.AutoGenerated.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.GauntletUI.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Engine.GauntletUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.CodeGenerator.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.CodeGenerator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.Data.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.Data.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.ExtraWidgets.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.ExtraWidgets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.PrefabSystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.PrefabSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.LinQuick.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.LinQuick.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ModuleManager.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ModuleManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.AutoGenerated.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.AutoGenerated.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Diamond.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Diamond.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.GauntletUI.Widgets.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.GauntletUI.Widgets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Helpers.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Helpers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Launcher.Library.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Launcher.Library.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Launcher.Steam.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Launcher.Steam.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Multiplayer.Test.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Multiplayer.Test.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.ViewModelCollection.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.ViewModelCollection.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.NavigationSystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.NavigationSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Network.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Network.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.Epic.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.Epic.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.GOG.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.GOG.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.Steam.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlatformService.Steam.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlayerServices.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PlayerServices.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PSAI.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.PSAI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ScreenSystem.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ScreenSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ServiceDiscovery.Client.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ServiceDiscovery.Client.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Starter.Library.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Starter.Library.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.TwoDimension.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.TwoDimension.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.TwoDimension.Standalone.dll">
+      <HintPath>C:\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.TwoDimension.Standalone.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
@@ -60,22 +244,22 @@
 
   <ItemGroup>
     <Reference Include="TaleWorlds.CampaignSystem">
-      <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.Core">
-      <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.Library">
-      <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
-      <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
-      <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.ObjectSystem">
-      <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
