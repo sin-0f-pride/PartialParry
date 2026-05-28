@@ -14,19 +14,19 @@ namespace PartialParry.Patches
     public static class ComputeBlowMagnitudePatch
     {
         // here we reduce the magnitude which his the damage before armor so that parry will not always parry everything
-        public static void Postfix(AttackCollisionData acd, AttackInformation attackInformation, MissionWeapon weapon, ref float specialMagnitude)
+        public static void Postfix(AttackCollisionData acd, AttackInformation attackInformation, ref float specialMagnitude)
         {
             if (!acd.AttackBlockedWithShield && (acd.CollisionResult == CombatCollisionResult.Parried || acd.CollisionResult == CombatCollisionResult.Blocked))
             {
                 float parryMagnitude = acd.CollisionResult != CombatCollisionResult.Parried ? Settings.Current.ParryBaseMagnitude : Settings.Current.PerfectParryMagnitude;
-                WeaponComponentData currentUsageItem = weapon.CurrentUsageItem;
-                if (currentUsageItem != null)
+                WeaponComponentData attackerWeapon = attackInformation.AttackerWeapon.CurrentUsageItem;
+                if (attackerWeapon != null)
                 {
-                    if (currentUsageItem.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
+                    if (attackerWeapon.WeaponFlags.HasAnyFlag(WeaponFlags.BonusAgainstShield))
                     {
                         parryMagnitude *= Settings.Current.BonusAgainstShieldMalus;
                     }
-                    int attackerWeaponValue = GetValueForWeaponClass(currentUsageItem.WeaponClass);
+                    int attackerWeaponValue = GetValueForWeaponClass(attackerWeapon.WeaponClass);
                     if (attackerWeaponValue == 0)
                     {
                         parryMagnitude *= Settings.Current.TwoHandedParryMalus;
@@ -53,9 +53,9 @@ namespace PartialParry.Patches
                 {
                     int attackerSkillLevel = 0;
                     int victimSkillLevel = 0;
-                    if (currentUsageItem != null)
+                    if (attackerWeapon != null)
                     {
-                        attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(currentUsageItem.RelevantSkill);
+                        attackerSkillLevel = attackInformation.AttackerAgentCharacter.GetSkillValue(attackerWeapon.RelevantSkill);
                     }
                     if (victimWeapon != null)
                     {
